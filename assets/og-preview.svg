@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="sky" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#92d8ff"/>
+      <stop offset="100%" stop-color="#fff2b5"/>
+    </linearGradient>
+    <linearGradient id="sunset" x1="0%" x2="100%" y1="0%" y2="0%">
+      <stop offset="0%" stop-color="#f04a27"/>
+      <stop offset="100%" stop-color="#ffb834"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#sky)"/>
+  <circle cx="982" cy="116" r="72" fill="#ffe267"/>
+  <rect y="438" width="1200" height="192" fill="#fff3be"/>
+  <path d="M0 430 218 174l228 256Z" fill="#6aa8e8"/>
+  <path d="M235 434 482 132l248 302Z" fill="#3a79c9"/>
+  <path d="M760 434 1012 158l188 276Z" fill="#4a90dd"/>
+  <path d="M555 476 670 304l118 172Z" fill="url(#sunset)"/>
+  <rect x="661" y="384" width="20" height="92" rx="10" fill="#ffffff" opacity=".88"/>
+  <path d="M675 286 720 309 675 333Z" fill="#ffe267"/>
+  <text x="96" y="154" fill="#f04a27" font-size="42" font-family="Nunito, Arial, sans-serif" font-weight="800" letter-spacing="5">YOU ARE INVITED!</text>
+  <text x="92" y="276" fill="#1a2230" font-size="88" font-family="Baloo 2, Arial, sans-serif" font-weight="800">Basak Baptist Church</text>
+  <text x="96" y="350" fill="#2e7fe6" font-size="54" font-family="Nunito, Arial, sans-serif" font-weight="800">Summer Youth Camp 2026</text>
+  <text x="96" y="408" fill="#4f5b69" font-size="32" font-family="Nunito, Arial, sans-serif" font-weight="700">May 4-5, 2026  •  Nabunturan, Davao de Oro</text>
+  <text x="96" y="472" fill="#4f5b69" font-size="28" font-family="Nunito, Arial, sans-serif">Fun, fellowship, worship, and spiritual growth for youth.</text>
+</svg>
