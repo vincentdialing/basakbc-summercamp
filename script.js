@@ -563,7 +563,6 @@ async function insertRegistration(payload) {
     headers: {
       "Content-Type": "application/json",
       apikey: supabaseAnonKey,
-      Authorization: `Bearer ${supabaseAnonKey}`,
       Prefer: "return=representation"
     },
     body: JSON.stringify({
@@ -576,7 +575,16 @@ async function insertRegistration(payload) {
   });
 
   if (!response.ok) {
-    throw new Error("Unable to save the main registration record.");
+    let errorMessage = "Unable to save the main registration record.";
+
+    try {
+      const errorData = await response.json();
+      errorMessage = errorData.message || errorData.error_description || errorData.hint || errorMessage;
+    } catch {
+      // Keep the fallback message when the response body is not JSON.
+    }
+
+    throw new Error(errorMessage);
   }
 
   const [record] = await response.json();
@@ -595,14 +603,22 @@ async function insertCampers(registrationId, attendees) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      apikey: supabaseAnonKey,
-      Authorization: `Bearer ${supabaseAnonKey}`
+      apikey: supabaseAnonKey
     },
     body: JSON.stringify(camperRows)
   });
 
   if (!response.ok) {
-    throw new Error("Unable to save the camper list.");
+    let errorMessage = "Unable to save the camper list.";
+
+    try {
+      const errorData = await response.json();
+      errorMessage = errorData.message || errorData.error_description || errorData.hint || errorMessage;
+    } catch {
+      // Keep the fallback message when the response body is not JSON.
+    }
+
+    throw new Error(errorMessage);
   }
 }
 
