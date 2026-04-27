@@ -1010,6 +1010,7 @@ select {
   background: linear-gradient(180deg, rgba(223, 255, 236, 0.95), rgba(242, 255, 247, 0.98));
   border: 1px solid rgba(57, 185, 114, 0.18);
   box-shadow: 0 10px 24px rgba(57, 185, 114, 0.1);
+  animation: feedbackSlideIn 400ms ease-out;
 }
 
 .form-feedback.is-success::before {
@@ -1023,6 +1024,8 @@ select {
   color: var(--red-deep);
   background: linear-gradient(180deg, rgba(255, 239, 235, 0.96), rgba(255, 248, 246, 0.98));
   border: 1px solid rgba(211, 55, 38, 0.14);
+  animation: feedbackSlideIn 400ms ease-out;
+  box-shadow: 0 10px 24px rgba(211, 55, 38, 0.12);
 }
 
 .site-footer {
@@ -1104,6 +1107,17 @@ select {
   100% {
     opacity: 0;
     transform: scale(1.18);
+  }
+}
+
+@keyframes feedbackSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

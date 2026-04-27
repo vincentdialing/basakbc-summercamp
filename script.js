@@ -78,6 +78,9 @@ function showFormFeedback(message, tone = "neutral") {
   if (tone === "error") {
     formFeedback.classList.add("is-error");
   }
+
+  // Scroll feedback into view with smooth behavior
+  formFeedback.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
 function restoreRegistrationDraft() {
@@ -710,10 +713,12 @@ function validateForm() {
         submitButton.textContent = "Registered!";
       }
 
-      if (formCard) {
-        formCard.classList.remove("is-submit-celebrating");
-        void formCard.offsetWidth;
-        formCard.classList.add("is-submit-celebrating");
+      // Clear success message after 2 seconds
+      if (result.mode === "live") {
+        submitSuccessResetTimer = window.setTimeout(() => {
+          formFeedback.classList.remove("is-success", "is-error");
+          formFeedback.textContent = "";
+        }, 2000);
       }
 
       registrationForm.reset();
