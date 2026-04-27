@@ -963,11 +963,6 @@ select {
   margin: 0.95rem 0 0;
 }
 
-.form-note {
-  font-size: 0.92rem;
-  line-height: 1.6;
-}
-
 .submit-button {
   width: 100%;
   margin-top: 1rem;
@@ -977,7 +972,9 @@ select {
 }
 
 .submit-button.is-submit-success {
-  animation: submitSuccessPop 720ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: submitSuccessPop 1100ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  background: linear-gradient(135deg, #1f9d61, #39b972);
+  box-shadow: 0 18px 34px rgba(31, 157, 97, 0.26);
 }
 
 .form-card.is-submit-celebrating::after {
@@ -992,6 +989,40 @@ select {
   background-repeat: no-repeat;
   animation: submitCelebrationBurst 880ms ease-out;
   pointer-events: none;
+}
+
+.form-feedback {
+  display: none;
+  padding: 0.85rem 1rem;
+  border-radius: 1rem;
+  font-size: 0.94rem;
+  line-height: 1.55;
+  font-weight: 700;
+}
+
+.form-feedback.is-success,
+.form-feedback.is-error {
+  display: block;
+}
+
+.form-feedback.is-success {
+  color: #13653f;
+  background: linear-gradient(180deg, rgba(223, 255, 236, 0.95), rgba(242, 255, 247, 0.98));
+  border: 1px solid rgba(57, 185, 114, 0.18);
+  box-shadow: 0 10px 24px rgba(57, 185, 114, 0.1);
+}
+
+.form-feedback.is-success::before {
+  content: "✓";
+  margin-right: 0.55rem;
+  color: #1f9d61;
+  font-weight: 800;
+}
+
+.form-feedback.is-error {
+  color: var(--red-deep);
+  background: linear-gradient(180deg, rgba(255, 239, 235, 0.96), rgba(255, 248, 246, 0.98));
+  border: 1px solid rgba(211, 55, 38, 0.14);
 }
 
 .site-footer {
@@ -1048,16 +1079,16 @@ select {
     box-shadow: 0 14px 28px rgba(211, 55, 38, 0.24);
   }
   35% {
-    transform: scale(1.04);
-    box-shadow: 0 16px 32px rgba(211, 55, 38, 0.32);
+    transform: scale(1.05);
+    box-shadow: 0 18px 36px rgba(31, 157, 97, 0.32);
   }
   68% {
-    transform: scale(0.98);
-    box-shadow: 0 10px 22px rgba(211, 55, 38, 0.2);
+    transform: scale(0.97) rotate(-0.5deg);
+    box-shadow: 0 12px 26px rgba(31, 157, 97, 0.22);
   }
   100% {
     transform: scale(1);
-    box-shadow: 0 14px 28px rgba(211, 55, 38, 0.24);
+    box-shadow: 0 18px 34px rgba(31, 157, 97, 0.26);
   }
 }
 

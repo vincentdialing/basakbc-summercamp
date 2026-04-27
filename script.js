@@ -27,6 +27,7 @@ const registrationDraftStorageKey = "bbc-camp-registration-draft";
 let bgMusicPlayer = null;
 let bgMusicWanted = true;
 let bgMusicReady = false;
+let submitSuccessResetTimer = null;
 
 function hasSupabaseConfig() {
   return Boolean(supabaseUrl && supabaseAnonKey);
@@ -60,6 +61,23 @@ function saveRegistrationDraft() {
 
 function clearRegistrationDraft() {
   window.localStorage.removeItem(registrationDraftStorageKey);
+}
+
+function showFormFeedback(message, tone = "neutral") {
+  if (!formFeedback) {
+    return;
+  }
+
+  formFeedback.textContent = message;
+  formFeedback.classList.remove("is-success", "is-error");
+
+  if (tone === "success") {
+    formFeedback.classList.add("is-success");
+  }
+
+  if (tone === "error") {
+    formFeedback.classList.add("is-error");
+  }
 }
 
 function restoreRegistrationDraft() {
@@ -654,12 +672,12 @@ function validateForm() {
     event.preventDefault();
 
     if (!registrationForm.checkValidity()) {
-      formFeedback.textContent = "Please complete all required fields with valid details.";
+      showFormFeedback("Please complete all required fields with valid details.", "error");
       return;
     }
 
     if (Number(attendeeCountInput?.value || 0) < 1) {
-      formFeedback.textContent = "Please add at least one camper before submitting.";
+      showFormFeedback("Please add at least one camper before submitting.", "error");
       return;
     }
 
@@ -674,14 +692,22 @@ function validateForm() {
       }
 
       const result = await submitRegistration(payload);
-      formFeedback.textContent = result.mode === "live"
-        ? "Registration submitted successfully. You can now export by church or pastor in Supabase."
-        : "Preview mode only: add your Supabase keys to save real registrations.";
+      showFormFeedback(
+        result.mode === "live"
+          ? "Registration received. Your campers are now saved for the camp list."
+          : "Preview mode only: add your Supabase keys to save real registrations.",
+        result.mode === "live" ? "success" : "error"
+      );
 
       if (submitButton instanceof HTMLButtonElement) {
+        if (submitSuccessResetTimer) {
+          window.clearTimeout(submitSuccessResetTimer);
+        }
+
         submitButton.classList.remove("is-submit-success");
         void submitButton.offsetWidth;
         submitButton.classList.add("is-submit-success");
+        submitButton.textContent = "Registered!";
       }
 
       if (formCard) {
@@ -697,13 +723,23 @@ function validateForm() {
       ensureAttendeeCards(0);
       clearRegistrationDraft();
     } catch (error) {
-      formFeedback.textContent = error instanceof Error
-        ? error.message
-        : "Something went wrong while saving the registration.";
+      showFormFeedback(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong while saving the registration.",
+        "error"
+      );
     } finally {
       if (submitButton instanceof HTMLButtonElement) {
         submitButton.disabled = false;
-        submitButton.textContent = "Submit Registration";
+        if (submitButton.classList.contains("is-submit-success")) {
+          submitSuccessResetTimer = window.setTimeout(() => {
+            submitButton.classList.remove("is-submit-success");
+            submitButton.textContent = "Submit Registration";
+          }, 1800);
+        } else {
+          submitButton.textContent = "Submit Registration";
+        }
       }
     }
   });
