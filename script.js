@@ -558,14 +558,16 @@ function buildRegistrationPayload(formData) {
 }
 
 async function insertRegistration(payload) {
-  const response = await fetch(`${supabaseUrl}/rest/v1/registrations?select=id`, {
+  const registrationId = window.crypto.randomUUID();
+  const response = await fetch(`${supabaseUrl}/rest/v1/registrations`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       apikey: supabaseAnonKey,
-      Prefer: "return=representation"
+      Prefer: "return=minimal"
     },
     body: JSON.stringify({
+      id: registrationId,
       church_name: payload.churchName,
       pastor_name: payload.pastorName,
       contact_person: payload.contactPerson,
@@ -587,8 +589,7 @@ async function insertRegistration(payload) {
     throw new Error(errorMessage);
   }
 
-  const [record] = await response.json();
-  return record?.id;
+  return registrationId;
 }
 
 async function insertCampers(registrationId, attendees) {
