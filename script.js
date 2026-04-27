@@ -8,14 +8,25 @@ const countdownElements = {
 };
 
 const registrationForm = document.getElementById("registration-form");
+const formCard = document.querySelector(".form-card");
 const formFeedback = document.getElementById("form-feedback");
 const mobileQuickNav = document.querySelector(".mobile-quick-nav");
+const topNav = document.querySelector(".top-nav");
+const pastorNameInput = document.getElementById("pastor-name");
+const pastorNameSample = document.getElementById("pastor-name-sample");
 const attendeeCountInput = document.getElementById("attendee-count");
+const attendeeCountDisplay = document.getElementById("attendee-count-display");
 const attendeeList = document.getElementById("attendee-list");
-const attendeeSummary = document.getElementById("attendee-summary");
 const addAttendeeButton = document.getElementById("add-attendee");
+const musicToggle = document.getElementById("music-toggle");
+const siteHeader = document.querySelector(".site-header");
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const bgMusicVideoId = "nWV2LlWvxvc";
+const registrationDraftStorageKey = "bbc-camp-registration-draft";
+let bgMusicPlayer = null;
+let bgMusicWanted = true;
+let bgMusicReady = false;
 
 function hasSupabaseConfig() {
   return Boolean(supabaseUrl && supabaseAnonKey);
@@ -23,6 +34,105 @@ function hasSupabaseConfig() {
 
 function pad(value) {
   return String(value).padStart(2, "0");
+}
+
+function saveRegistrationDraft() {
+  if (!registrationForm) {
+    return;
+  }
+
+  const attendeeCards = Array.from(attendeeList?.querySelectorAll(".attendee-card") || []);
+  const draft = {
+    churchName: registrationForm.elements.namedItem("churchName")?.value || "",
+    pastorName: registrationForm.elements.namedItem("pastorName")?.value || "Ptr. ",
+    contactPerson: registrationForm.elements.namedItem("contactPerson")?.value || "",
+    contactNumber: registrationForm.elements.namedItem("contactNumber")?.value || "",
+    attendeeCount: attendeeCards.length,
+    attendees: attendeeCards.map((card) => ({
+      name: card.querySelector("input[name='attendeeName[]']")?.value || "",
+      age: card.querySelector("input[name='attendeeAge[]']")?.value || "",
+      participantLevel: card.querySelector("select[name='attendeeLevel[]']")?.value || ""
+    }))
+  };
+
+  window.localStorage.setItem(registrationDraftStorageKey, JSON.stringify(draft));
+}
+
+function clearRegistrationDraft() {
+  window.localStorage.removeItem(registrationDraftStorageKey);
+}
+
+function restoreRegistrationDraft() {
+  if (!registrationForm) {
+    return;
+  }
+
+  const savedDraft = window.localStorage.getItem(registrationDraftStorageKey);
+  if (!savedDraft) {
+    return;
+  }
+
+  try {
+    const draft = JSON.parse(savedDraft);
+    registrationForm.elements.namedItem("churchName").value = draft.churchName || "";
+    registrationForm.elements.namedItem("pastorName").value = draft.pastorName || "Ptr. ";
+    registrationForm.elements.namedItem("contactPerson").value = draft.contactPerson || "";
+    registrationForm.elements.namedItem("contactNumber").value = draft.contactNumber || "";
+
+    if (attendeeCountInput) {
+      attendeeCountInput.value = String(draft.attendeeCount || 0);
+    }
+
+    ensureAttendeeCards(Number(draft.attendeeCount) || 0);
+
+    const attendeeCards = Array.from(attendeeList?.querySelectorAll(".attendee-card") || []);
+    attendeeCards.forEach((card, index) => {
+      const attendeeDraft = draft.attendees?.[index];
+      if (!attendeeDraft) {
+        return;
+      }
+
+      const nameInput = card.querySelector("input[name='attendeeName[]']");
+      const ageInput = card.querySelector("input[name='attendeeAge[]']");
+      const levelSelect = card.querySelector("select[name='attendeeLevel[]']");
+
+      if (nameInput) {
+        nameInput.value = attendeeDraft.name || "";
+      }
+
+      if (ageInput) {
+        ageInput.value = attendeeDraft.age || "";
+      }
+
+      if (levelSelect) {
+        levelSelect.value = attendeeDraft.participantLevel || "";
+      }
+    });
+
+    pastorNameInput?.dispatchEvent(new Event("input", { bubbles: true }));
+    saveRegistrationDraft();
+  } catch {
+    clearRegistrationDraft();
+  }
+}
+
+function setupRegistrationDraftPersistence() {
+  if (!registrationForm) {
+    return;
+  }
+
+  registrationForm.addEventListener("input", saveRegistrationDraft);
+  registrationForm.addEventListener("change", saveRegistrationDraft);
+}
+
+function updateMusicToggleState(isPlaying) {
+  if (!musicToggle) {
+    return;
+  }
+
+  musicToggle.classList.toggle("is-muted", !isPlaying);
+  musicToggle.setAttribute("aria-pressed", String(isPlaying));
+  musicToggle.setAttribute("aria-label", isPlaying ? "Turn background music off" : "Turn background music on");
 }
 
 function updateCountdown() {
@@ -67,6 +177,65 @@ function observeReveals() {
   revealItems.forEach((item) => observer.observe(item));
 }
 
+function tryPlayBackgroundMusic() {
+  if (!bgMusicPlayer || !bgMusicReady || !bgMusicWanted) {
+    return;
+  }
+
+  try {
+    bgMusicPlayer.unMute();
+    bgMusicPlayer.playVideo();
+    updateMusicToggleState(true);
+  } catch {
+    updateMusicToggleState(false);
+  }
+}
+
+function stopBackgroundMusic() {
+  if (!bgMusicPlayer || !bgMusicReady) {
+    return;
+  }
+
+  try {
+    bgMusicPlayer.pauseVideo();
+    bgMusicPlayer.mute();
+  } catch {
+    // Ignore player state errors from blocked/unfinished initialization.
+  }
+
+  updateMusicToggleState(false);
+}
+
+function setupBackgroundMusic() {
+  if (!musicToggle) {
+    return;
+  }
+
+  updateMusicToggleState(true);
+
+  musicToggle.addEventListener("click", () => {
+    bgMusicWanted = !bgMusicWanted;
+
+    if (bgMusicWanted) {
+      tryPlayBackgroundMusic();
+      return;
+    }
+
+    stopBackgroundMusic();
+  });
+
+  const unlockPlayback = () => {
+    if (!bgMusicWanted) {
+      return;
+    }
+
+    tryPlayBackgroundMusic();
+  };
+
+  window.addEventListener("pointerdown", unlockPlayback, { once: true });
+  window.addEventListener("keydown", unlockPlayback, { once: true });
+}
+
 function setupMobileNav() {
   if (!mobileQuickNav) {
     return;
@@ -97,6 +266,154 @@ function setupMobileNav() {
   });
 }
 
+function setupNavScrollSpy() {
+  const desktopNavLinks = Array.from(topNav?.querySelectorAll("a[href^='#']") || []);
+  const mobileNavLinks = Array.from(mobileQuickNav?.querySelectorAll("a[href^='#']") || []);
+  const navLinks = [...desktopNavLinks, ...mobileNavLinks];
+
+  if (!desktopNavLinks.length && !mobileNavLinks.length) {
+    return;
+  }
+
+  const desktopTargets = desktopNavLinks.map((link) => link.getAttribute("href")).filter(Boolean);
+  const mobileTargets = mobileNavLinks.map((link) => link.getAttribute("href")).filter(Boolean);
+  const allTargets = [...new Set([...desktopTargets, ...mobileTargets])];
+  const sections = allTargets
+    .map((targetId) => ({
+      targetId,
+      element: document.querySelector(targetId)
+    }))
+    .filter((entry) => entry.element);
+
+  if (!sections.length) {
+    return;
+  }
+
+  const setActiveTarget = (links, targetId) => {
+    links.forEach((link) => {
+      const isActive = link.getAttribute("href") === targetId;
+      link.classList.toggle("is-active", isActive);
+      if (isActive) {
+        link.setAttribute("aria-current", "page");
+      } else {
+        link.removeAttribute("aria-current");
+      }
+    });
+  };
+
+  const findActiveTarget = (targets, fallbackTarget, scrollMark) => {
+    let activeTarget = fallbackTarget;
+
+    targets.forEach((targetId) => {
+      const section = sections.find((entry) => entry.targetId === targetId);
+      if (!section?.element) {
+        return;
+      }
+
+      if (section.element.offsetTop <= scrollMark) {
+        activeTarget = targetId;
+      }
+    });
+
+    return activeTarget;
+  };
+
+  const syncActiveSection = () => {
+    const headerOffset = (siteHeader?.offsetHeight || 0) + 120;
+    const scrollMark = window.scrollY + headerOffset;
+    const isOnLanding = window.scrollY < Math.max(220, (siteHeader?.offsetHeight || 0) + 40);
+    const desktopActiveTarget = desktopTargets.length
+      ? findActiveTarget(desktopTargets, desktopTargets[0], scrollMark)
+      : null;
+    const mobileActiveTarget = mobileTargets.length
+      ? findActiveTarget(mobileTargets, mobileTargets[0], scrollMark)
+      : null;
+
+    if (isOnLanding) {
+      setActiveTarget(desktopNavLinks, "__none__");
+    } else if (desktopActiveTarget) {
+      setActiveTarget(desktopNavLinks, desktopActiveTarget);
+    }
+
+    if (mobileActiveTarget) {
+      setActiveTarget(mobileNavLinks, mobileActiveTarget);
+    }
+  };
+
+  syncActiveSection();
+  window.addEventListener("scroll", syncActiveSection, { passive: true });
+  window.addEventListener("resize", syncActiveSection);
+}
+
+function normalizePastorName(value) {
+  const trimmedValue = String(value || "").trim();
+
+  if (!trimmedValue) {
+    return "Ptr. ";
+  }
+
+  return /^ptr\.\s*/i.test(trimmedValue)
+    ? trimmedValue.replace(/^ptr\.\s*/i, "Ptr. ")
+    : `Ptr. ${trimmedValue}`;
+}
+
+function hasPastorNameContent(value) {
+  return normalizePastorName(value).replace(/^Ptr\.\s*/i, "").trim().length > 0;
+}
+
+function setupPastorNameField() {
+  if (!pastorNameInput) {
+    return;
+  }
+
+  const updatePastorNameSample = () => {
+    if (!pastorNameSample) {
+      return;
+    }
+
+    pastorNameSample.classList.toggle("is-hidden", hasPastorNameContent(pastorNameInput.value));
+  };
+
+  const syncPastorNameValidity = () => {
+    pastorNameInput.setCustomValidity(
+      hasPastorNameContent(pastorNameInput.value)
+        ? ""
+        : "Please enter the pastor's name after Ptr."
+    );
+  };
+
+  if (!pastorNameInput.value.trim()) {
+    pastorNameInput.value = "Ptr. ";
+  } else {
+    pastorNameInput.value = normalizePastorName(pastorNameInput.value);
+  }
+
+  syncPastorNameValidity();
+  updatePastorNameSample();
+
+  pastorNameInput.addEventListener("focus", () => {
+    if (!pastorNameInput.value.trim()) {
+      pastorNameInput.value = "Ptr. ";
+    }
+  });
+
+  pastorNameInput.addEventListener("input", () => {
+    if (!pastorNameInput.value.startsWith("Ptr. ")) {
+      const suffix = pastorNameInput.value.replace(/^ptr\.?\s*/i, "");
+      pastorNameInput.value = `Ptr. ${suffix}`;
+    }
+
+    syncPastorNameValidity();
+    updatePastorNameSample();
+  });
+
+  pastorNameInput.addEventListener("blur", () => {
+    pastorNameInput.value = normalizePastorName(pastorNameInput.value);
+    syncPastorNameValidity();
+    updatePastorNameSample();
+  });
+}
+
 function buildAttendeeCard(index) {
   const card = document.createElement("div");
   card.className = "attendee-card";
@@ -116,6 +433,7 @@ function buildAttendeeCard(index) {
     card.remove();
     renumberAttendees();
     syncAttendeeCountFromCards();
+    saveRegistrationDraft();
   });
 
   header.append(title, removeButton);
@@ -162,9 +480,10 @@ function renumberAttendees() {
     }
   });
 
-  if (attendeeSummary) {
+  if (attendeeCountDisplay) {
     const total = attendeeList.querySelectorAll(".attendee-card").length;
-    attendeeSummary.textContent = `${total} attendee${total === 1 ? "" : "s"} listed.`;
+    attendeeCountDisplay.textContent = String(total);
+    attendeeCountDisplay.parentElement.lastChild.textContent = ` ${total === 1 ? "camper" : "campers"} listed`;
   }
 }
 
@@ -174,7 +493,7 @@ function syncAttendeeCountFromCards() {
   }
 
   const total = attendeeList.querySelectorAll(".attendee-card").length;
-  attendeeCountInput.value = String(total || 1);
+  attendeeCountInput.value = String(total);
 }
 
 function ensureAttendeeCards(total) {
@@ -182,7 +501,7 @@ function ensureAttendeeCards(total) {
     return;
   }
 
-  const safeTotal = Math.max(1, total || 1);
+  const safeTotal = Math.max(0, total || 0);
   const cards = attendeeList.querySelectorAll(".attendee-card");
 
   if (cards.length < safeTotal) {
@@ -203,23 +522,22 @@ function setupAttendeeList() {
     return;
   }
 
-  ensureAttendeeCards(Number(attendeeCountInput.value) || 1);
-
-  attendeeCountInput.addEventListener("input", () => {
-    ensureAttendeeCards(Number(attendeeCountInput.value) || 1);
-  });
+  ensureAttendeeCards(Number(attendeeCountInput.value) || 0);
 
   addAttendeeButton.addEventListener("click", () => {
     const nextTotal = attendeeList.querySelectorAll(".attendee-card").length + 1;
     ensureAttendeeCards(nextTotal);
     attendeeCountInput.value = String(nextTotal);
+    saveRegistrationDraft();
   });
 }
 
 function buildRegistrationPayload(formData) {
+  const pastorName = normalizePastorName(formData.get("pastorName"));
+
   const payload = {
     churchName: formData.get("churchName"),
-    pastorName: formData.get("pastorName"),
+    pastorName,
     contactPerson: formData.get("contactPerson"),
     attendeeCount: formData.get("attendeeCount"),
     contactNumber: formData.get("contactNumber"),
@@ -323,6 +641,11 @@ function validateForm() {
       return;
     }
 
+    if (Number(attendeeCountInput?.value || 0) < 1) {
+      formFeedback.textContent = "Please add at least one camper before submitting.";
+      return;
+    }
+
     const formData = new FormData(registrationForm);
     const payload = buildRegistrationPayload(formData);
     const submitButton = registrationForm.querySelector(".submit-button");
@@ -337,8 +660,25 @@ function validateForm() {
       formFeedback.textContent = result.mode === "live"
         ? "Registration submitted successfully. You can now export by church or pastor in Supabase."
         : "Preview mode only: add your Supabase keys to save real registrations.";
+
+      if (submitButton instanceof HTMLButtonElement) {
+        submitButton.classList.remove("is-submit-success");
+        void submitButton.offsetWidth;
+        submitButton.classList.add("is-submit-success");
+      }
+
+      if (formCard) {
+        formCard.classList.remove("is-submit-celebrating");
+        void formCard.offsetWidth;
+        formCard.classList.add("is-submit-celebrating");
+      }
+
       registrationForm.reset();
-      ensureAttendeeCards(1);
+      if (attendeeCountInput) {
+        attendeeCountInput.value = "0";
+      }
+      ensureAttendeeCards(0);
+      clearRegistrationDraft();
     } catch (error) {
       formFeedback.textContent = error instanceof Error
         ? error.message
@@ -352,9 +692,63 @@ function validateForm() {
   });
 }
 
+window.onYouTubeIframeAPIReady = () => {
+  const playerHost = document.getElementById("bg-music-player");
+  if (!playerHost || !window.YT?.Player) {
+    updateMusicToggleState(false);
+    return;
+  }
+
+  bgMusicPlayer = new window.YT.Player("bg-music-player", {
+    width: "0",
+    height: "0",
+    videoId: bgMusicVideoId,
+    playerVars: {
+      autoplay: 1,
+      controls: 0,
+      disablekb: 1,
+      fs: 0,
+      loop: 1,
+      modestbranding: 1,
+      playsinline: 1,
+      playlist: bgMusicVideoId,
+      rel: 0
+    },
+    events: {
+      onReady: () => {
+        bgMusicReady = true;
+        tryPlayBackgroundMusic();
+      },
+      onStateChange: (event) => {
+        if (!window.YT) {
+          return;
+        }
+
+        if (event.data === window.YT.PlayerState.ENDED && bgMusicWanted) {
+          bgMusicPlayer?.seekTo(0);
+          tryPlayBackgroundMusic();
+        }
+
+        if (event.data === window.YT.PlayerState.PLAYING) {
+          updateMusicToggleState(true);
+        }
+
+        if (event.data === window.YT.PlayerState.PAUSED && bgMusicWanted === false) {
+          updateMusicToggleState(false);
+        }
+      }
+    }
+  });
+};
+
 updateCountdown();
 setInterval(updateCountdown, 1000);
 observeReveals();
+setupBackgroundMusic();
 setupMobileNav();
+setupNavScrollSpy();
+setupPastorNameField();
 setupAttendeeList();
+restoreRegistrationDraft();
+setupRegistrationDraftPersistence();
 validateForm();

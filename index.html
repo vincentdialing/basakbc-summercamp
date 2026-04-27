@@ -71,24 +71,40 @@
       <path d="m3 20 18-8L3 4l3 8-3 8Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/>
       <path d="M6 12h8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/>
     </symbol>
+    <symbol id="icon-music" viewBox="0 0 24 24">
+      <path d="M9 18a2 2 0 1 1-4 0a2 2 0 0 1 4 0Zm10-2a2 2 0 1 1-4 0a2 2 0 0 1 4 0ZM9 18V6l10-2v12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/>
+    </symbol>
+    <symbol id="icon-music-off" viewBox="0 0 24 24">
+      <path d="M9 18a2 2 0 1 1-4 0a2 2 0 0 1 4 0Zm10-2a2 2 0 1 1-4 0a2 2 0 0 1 4 0ZM9 18V6l10-2v12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/>
+      <path d="m4 4 16 16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/>
+    </symbol>
   </svg>
   <a class="floating-register" href="#register" aria-label="Jump to registration form">Register</a>
+  <div class="bg-music-player" id="bg-music-player" aria-hidden="true"></div>
 
   <header class="site-header">
-    <a class="brand-lockup" href="#top" aria-label="Basak Baptist Church invitation home">
-      <img src="assets/church-logo.svg" alt="Basak Baptist Church official logo">
-      <div>
-        <strong>Basak Baptist Church</strong>
-        <span>You are invited!</span>
+    <div class="site-header-inner">
+      <div class="header-brand-group">
+        <a class="brand-lockup" href="#top" aria-label="Basak Baptist Church invitation home">
+          <img src="assets/church-logo.svg" alt="Basak Baptist Church official logo">
+          <div>
+            <strong>Basak Baptist Church</strong>
+            <span>You are invited!</span>
+          </div>
+        </a>
+        <button class="music-toggle" id="music-toggle" type="button" aria-pressed="true" aria-label="Turn background music off">
+          <svg class="music-toggle-on" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-music"></use></svg>
+          <svg class="music-toggle-off" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-music-off"></use></svg>
+        </button>
       </div>
-    </a>
-    <nav class="top-nav" aria-label="Primary">
-      <a href="#details">Details</a>
-      <a href="#activities">Activities</a>
-      <a href="#bring">Bring</a>
-      <a href="#location">Location</a>
-      <a href="#register">RSVP</a>
-    </nav>
+      <nav class="top-nav" aria-label="Primary">
+        <a href="#details">Details</a>
+        <a href="#activities">Activities</a>
+        <a href="#bring">Bring</a>
+        <a href="#location">Location</a>
+        <a href="#register">RSVP</a>
+      </nav>
+    </div>
   </header>
 
   <nav class="mobile-quick-nav" aria-label="Mobile quick navigation">
@@ -126,7 +142,7 @@
           <span class="hero-title-line">Church</span>
         </h1>
         <p class="hero-camp-title">Summer Youth Camp 2026</p>
-        <p class="hero-subtitle">Two fun-filled days for young people to connect, worship, grow, and enjoy camp together in a welcoming Baptist community.</p>
+        <p class="hero-subtitle">Two fun-filled days for young people to connect, grow, build friendships, and enjoy camp together in a warm and welcoming community.</p>
         <div class="hero-meta">
           <span>May 4-5, 2026</span>
           <span>Starts 1:00 PM</span>
@@ -335,27 +351,30 @@
                 <input type="text" name="churchName" autocomplete="organization" placeholder="Basak Baptist Church" required>
               </label>
               <label>
-                <span>Pastor Name</span>
-                <input type="text" name="pastorName" autocomplete="name" placeholder="Ptr. Dennis H. Dialing" required>
+                <span>Pastor's Name</span>
+                <div class="pastor-input-shell">
+                  <input id="pastor-name" type="text" name="pastorName" autocomplete="name" value="Ptr. " required>
+                  <span class="pastor-name-sample" id="pastor-name-sample" aria-hidden="true">Dennis H. Dialing</span>
+                </div>
               </label>
               <label>
                 <span>Contact Person</span>
                 <input type="text" name="contactPerson" autocomplete="name" placeholder="Youth leader or main contact" required>
               </label>
-              <label class="field-full">
-                <span>Number of Attendees</span>
-                <input id="attendee-count" type="number" name="attendeeCount" min="1" inputmode="numeric" placeholder="Enter total campers coming" required>
-              </label>
+              <div class="field-full attendee-count-panel" aria-live="polite">
+                <span class="attendee-count-label">Number of Campers</span>
+                <p class="attendee-count-display"><strong id="attendee-count-display">0</strong> campers listed</p>
+                <input id="attendee-count" type="hidden" name="attendeeCount" value="0">
+              </div>
             </div>
           </div>
 
           <div class="form-section">
-            <div class="form-section-heading">
-              <h3>Camper's List</h3>
-              <p>Add each person attending, including age and participant level, so the camp team can prepare well.</p>
-            </div>
-            <div class="attendee-toolbar">
-              <p class="attendee-summary" id="attendee-summary">Add at least 1 attendee entry.</p>
+            <div class="form-section-heading form-section-heading-split">
+              <div>
+                <h3>Camper's List</h3>
+                <p>Add each person attending, including age and participant level, so the camp team can prepare well.</p>
+              </div>
               <button class="button button-secondary attendee-add-button" id="add-attendee" type="button">Add attendee</button>
             </div>
             <div class="attendee-list" id="attendee-list"></div>
@@ -374,7 +393,6 @@
             </div>
           </div>
 
-          <p class="form-note">Your details stay in this browser demo for now and are ready to connect to a real RSVP endpoint later.</p>
           <button class="button button-primary submit-button" type="submit">Submit Registration</button>
           <p class="form-feedback" id="form-feedback" role="status" aria-live="polite"></p>
         </form>
@@ -387,6 +405,7 @@
     <p class="footer-subtext">We'd love to see you at Summer Youth Camp 2026.</p>
   </footer>
 
+  <script src="https://www.youtube.com/iframe_api"></script>
   <script type="module" src="script.js"></script>
 </body>
 </html>
