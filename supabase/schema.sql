@@ -26,15 +26,26 @@ drop policy if exists "anon can insert registrations" on public.registrations;
 create policy "anon can insert registrations"
 on public.registrations
 for insert
-to anon
-with check (auth.role() = 'anon');
+to anon, authenticated
+with check (
+  char_length(trim(church_name)) > 0
+  and char_length(trim(pastor_name)) > 0
+  and char_length(trim(contact_person)) > 0
+  and char_length(trim(contact_number)) > 0
+  and attendee_count > 0
+);
 
 drop policy if exists "anon can insert campers" on public.campers;
 create policy "anon can insert campers"
 on public.campers
 for insert
-to anon
-with check (auth.role() = 'anon');
+to anon, authenticated
+with check (
+  registration_id is not null
+  and char_length(trim(full_name)) > 0
+  and age > 0
+  and char_length(trim(participant_level)) > 0
+);
 
 drop policy if exists "authenticated can read registrations" on public.registrations;
 create policy "authenticated can read registrations"
