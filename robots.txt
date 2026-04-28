@@ -1,0 +1,8 @@
+User-agent: facebookexternalhit/1.1
+Allow: /
+
+User-agent: facebookexternalhit/1.0
+Allow: /
+
+User-agent: *
+Allow: /
