@@ -1,0 +1,18 @@
+{
+  "name": "Basak Baptist Church Summer Youth Camp 2026",
+  "short_name": "BBC Camp 2026",
+  "description": "Official invitation and registration page for the Basak Baptist Church Summer Youth Camp 2026.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fff8ec",
+  "theme_color": "#f04a27",
+  "icons": [
+    {
+      "src": "/preview.webp",
+      "sizes": "3244x1720",
+      "type": "image/webp",
+      "purpose": "any"
+    }
+  ]
+}
