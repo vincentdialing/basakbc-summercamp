@@ -439,7 +439,7 @@ img {
 }
 
 .hero-panel {
-  padding: 1.2rem 1.2rem 0;
+  padding: 1.2rem 1.2rem 1.2rem;
 }
 
 .panel-label {
@@ -1143,7 +1143,7 @@ select {
   }
 
   .hero-panel {
-    padding: 1.4rem 1.4rem 0;
+    padding: 1.4rem 1.4rem 1.4rem;
   }
 
   .hero-actions {
@@ -1312,7 +1312,7 @@ select {
   }
 
   .hero-panel {
-    padding: 1.2rem 1.2rem 0;
+    padding: 1.2rem 1.2rem 1.2rem;
   }
 
   .hero-subtitle {
