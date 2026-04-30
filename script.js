@@ -20,6 +20,7 @@ const attendeeList = document.getElementById("attendee-list");
 const addAttendeeButton = document.getElementById("add-attendee");
 const musicToggle = document.getElementById("music-toggle");
 const siteHeader = document.querySelector(".site-header");
+const adminTrigger = document.querySelector("[data-admin-trigger='true']");
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const bgMusicVideoId = "nWV2LlWvxvc";
@@ -28,6 +29,8 @@ let bgMusicPlayer = null;
 let bgMusicWanted = true;
 let bgMusicReady = false;
 let submitSuccessResetTimer = null;
+let adminPressTimer = null;
+let adminLongPressTriggered = false;
 
 function hasSupabaseConfig() {
   return Boolean(supabaseUrl && supabaseAnonKey);
@@ -45,6 +48,7 @@ function saveRegistrationDraft() {
   const attendeeCards = Array.from(attendeeList?.querySelectorAll(".attendee-card") || []);
   const draft = {
     churchName: registrationForm.elements.namedItem("churchName")?.value || "",
+    churchAddress: registrationForm.elements.namedItem("churchAddress")?.value || "",
     pastorName: registrationForm.elements.namedItem("pastorName")?.value || "Ptr. ",
     contactPerson: registrationForm.elements.namedItem("contactPerson")?.value || "",
     contactNumber: registrationForm.elements.namedItem("contactNumber")?.value || "",
@@ -96,6 +100,7 @@ function restoreRegistrationDraft() {
   try {
     const draft = JSON.parse(savedDraft);
     registrationForm.elements.namedItem("churchName").value = draft.churchName || "";
+    registrationForm.elements.namedItem("churchAddress").value = draft.churchAddress || "";
     registrationForm.elements.namedItem("pastorName").value = draft.pastorName || "Ptr. ";
     registrationForm.elements.namedItem("contactPerson").value = draft.contactPerson || "";
     registrationForm.elements.namedItem("contactNumber").value = draft.contactNumber || "";
@@ -553,11 +558,51 @@ function setupAttendeeList() {
   });
 }
 
+function clearAdminLongPressTimer() {
+  if (adminPressTimer) {
+    window.clearTimeout(adminPressTimer);
+    adminPressTimer = null;
+  }
+}
+
+function setupSecretAdminTrigger() {
+  if (!adminTrigger) {
+    return;
+  }
+
+  const startLongPress = () => {
+    clearAdminLongPressTimer();
+    adminLongPressTriggered = false;
+    adminPressTimer = window.setTimeout(() => {
+      adminLongPressTriggered = true;
+      window.open("./admin.html", "_blank", "noopener");
+    }, 1200);
+  };
+
+  const cancelLongPress = () => {
+    clearAdminLongPressTimer();
+  };
+
+  adminTrigger.addEventListener("pointerdown", startLongPress);
+  adminTrigger.addEventListener("pointerup", cancelLongPress);
+  adminTrigger.addEventListener("pointerleave", cancelLongPress);
+  adminTrigger.addEventListener("pointercancel", cancelLongPress);
+  adminTrigger.addEventListener("click", (event) => {
+    if (!adminLongPressTriggered) {
+      return;
+    }
+
+    event.preventDefault();
+    adminLongPressTriggered = false;
+  });
+}
+
 function buildRegistrationPayload(formData) {
   const pastorName = normalizePastorName(formData.get("pastorName"));
 
   const payload = {
     churchName: formData.get("churchName"),
+    churchAddress: formData.get("churchAddress"),
     pastorName,
     contactPerson: formData.get("contactPerson"),
     attendeeCount: formData.get("attendeeCount"),
@@ -590,6 +635,7 @@ async function insertRegistration(payload) {
     body: JSON.stringify({
       id: registrationId,
       church_name: payload.churchName,
+      church_address: payload.churchAddress,
       pastor_name: payload.pastorName,
       contact_person: payload.contactPerson,
       contact_number: payload.contactNumber,
@@ -719,6 +765,7 @@ function validateForm() {
           formFeedback.classList.remove("is-success", "is-error");
           formFeedback.textContent = "";
         }, 2000);
+
       }
 
       registrationForm.reset();
@@ -810,3 +857,4 @@ setupAttendeeList();
 restoreRegistrationDraft();
 setupRegistrationDraftPersistence();
 validateForm();
+setupSecretAdminTrigger();

@@ -3,12 +3,16 @@ create extension if not exists pgcrypto;
 create table if not exists public.registrations (
   id uuid primary key default gen_random_uuid(),
   church_name text not null,
+  church_address text not null,
   pastor_name text not null,
   contact_person text not null,
   contact_number text not null,
   attendee_count integer not null check (attendee_count > 0),
   created_at timestamptz not null default now()
 );
+
+alter table public.registrations
+add column if not exists church_address text;
 
 create table if not exists public.campers (
   id uuid primary key default gen_random_uuid(),
@@ -29,6 +33,7 @@ for insert
 to anon, authenticated
 with check (
   char_length(trim(church_name)) > 0
+  and char_length(trim(church_address)) > 0
   and char_length(trim(pastor_name)) > 0
   and char_length(trim(contact_person)) > 0
   and char_length(trim(contact_number)) > 0
@@ -67,6 +72,7 @@ select
   r.id as registration_id,
   r.created_at as submitted_at,
   r.church_name,
+  r.church_address,
   r.pastor_name,
   r.contact_person,
   r.contact_number,
@@ -84,6 +90,7 @@ select
   r.id as registration_id,
   r.created_at as submitted_at,
   r.church_name,
+  r.church_address,
   r.pastor_name,
   r.contact_person,
   r.contact_number,

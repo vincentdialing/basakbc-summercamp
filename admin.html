@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BBC Summer Youth Camp Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="admin-page admin-login-page">
+  <main class="admin-shell">
+    <section class="admin-auth-card card">
+      <div class="admin-brand-row">
+        <a class="brand-lockup" href="./index.html" aria-label="Return to the main invitation page">
+          <img src="assets/church-logo.svg" alt="Basak Baptist Church official logo">
+          <div>
+            <strong>Basak Baptist Church</strong>
+            <span>Admin Panel</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="admin-auth-grid">
+        <div class="admin-auth-copy">
+          <div class="admin-copy-badge">Admin</div>
+          <p class="eyebrow">Quick Access</p>
+          <h1>Fast Delegate View</h1>
+          <p class="admin-auth-subtitle">Open registrations, contacts, and delegate counts in one dashboard.</p>
+          <div class="admin-mini-grid" aria-hidden="true">
+            <span class="admin-mini-pill">Live List</span>
+            <span class="admin-mini-pill">Search</span>
+            <span class="admin-mini-pill">Sort</span>
+          </div>
+        </div>
+
+        <div class="admin-form-panel">
+          <div class="admin-form-panel-head">
+            <p>Sign in</p>
+            <h2>Open Dashboard</h2>
+          </div>
+          <form class="admin-login-form" id="admin-login-form" novalidate>
+            <label>
+              <span>Email</span>
+              <input id="admin-email" name="email" type="email" autocomplete="email" placeholder="admin@email.com"
+                required>
+            </label>
+            <label>
+              <span>Password</span>
+              <input id="admin-password" name="password" type="password" autocomplete="current-password"
+                placeholder="Password" required>
+            </label>
+            <button class="button button-primary" id="admin-login-button" type="submit">Enter</button>
+            <p class="admin-status" id="admin-auth-status" role="status" aria-live="polite">Log in to continue.
+            </p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="admin.js"></script>
+</body>
+
+</html>
