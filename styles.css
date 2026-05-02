@@ -1,4 +1,6 @@
 :root {
+  --font-body: "Manrope", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Outfit", "Avenir Next", "Segoe UI", sans-serif;
   --red: #c94a35;
   --red-deep: #9e3021;
   --red-soft: #f8e7e0;
@@ -37,18 +39,28 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
-  font-family: "Manrope", sans-serif;
+  font-family: var(--font-body);
   color: var(--ink);
+  font-synthesis: none;
   background:
     radial-gradient(circle at top left, rgba(201, 74, 53, 0.08), transparent 24%),
     radial-gradient(circle at top right, rgba(71, 127, 188, 0.1), transparent 20%),
     linear-gradient(180deg, #fbf8f6 0%, #fcfcfb 46%, #f5f8fb 100%);
   min-height: 100vh;
   padding-bottom: 6.5rem;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: var(--font-body);
 }
 
 body::before {
@@ -385,7 +397,8 @@ body.is-admin-visible .admin-section {
 .admin-auth-copy h1,
 .admin-dashboard h2 {
   margin: 0;
-  font-family: "Outfit", sans-serif;
+  font-family: var(--font-display);
+  font-weight: 700;
   font-size: clamp(2.25rem, 4.5vw, 3.65rem);
   line-height: 0.94;
   letter-spacing: -0.045em;
@@ -555,11 +568,12 @@ body.is-admin-visible .admin-section {
 .section-heading h2,
 .card h3,
 .time-box span {
-  font-family: "Outfit", sans-serif;
+  font-family: var(--font-display);
 }
 
 .hero h1 {
   margin: 0.3rem 0 0;
+  font-weight: 700;
   font-size: clamp(2.28rem, 8.9vw, 5rem);
   line-height: 1;
   letter-spacing: -0.04em;
@@ -901,6 +915,7 @@ body.is-admin-visible .admin-section {
 
 .card h3 {
   margin: 0.72rem 0 0.5rem;
+  font-weight: 700;
   font-size: 1.42rem;
   line-height: 1.12;
   letter-spacing: -0.02em;
@@ -950,6 +965,7 @@ body.is-admin-visible .admin-section {
 .time-box span {
   display: block;
   color: var(--red);
+  font-weight: 700;
   font-size: clamp(2rem, 10vw, 3.4rem);
   animation: pulse 1.8s ease-in-out infinite;
 }
