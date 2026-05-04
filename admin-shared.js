@@ -75,6 +75,26 @@ async function authRequest(path, options = {}) {
   return response.json();
 }
 
+export async function verifyCurrentAdminPassword(password) {
+  const session = getSession();
+  const email = String(session?.user?.email || "").trim();
+
+  if (!email) {
+    throw new Error("Login again.");
+  }
+
+  if (!String(password || "").trim()) {
+    throw new Error("Password is required.");
+  }
+
+  await authRequest("/auth/v1/token?grant_type=password", {
+    method: "POST",
+    body: JSON.stringify({ email, password })
+  });
+
+  return true;
+}
+
 export async function refreshSession(session) {
   if (!session?.refresh_token) {
     throw new Error("Session expired.");
