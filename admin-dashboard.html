@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BBC Summer Youth Camp Dashboard</title>
+  <title>BBC Summer Youth Camp Admin Hub</title>
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,7 +23,7 @@
           <img src="assets/church-logo.svg" alt="Basak Baptist Church official logo">
           <div>
             <strong>Basak Baptist Church</strong>
-            <span>Admin Dashboard</span>
+            <span>Admin Hub</span>
           </div>
         </a>
         <button class="music-toggle admin-header-spacer" type="button" aria-hidden="true" tabindex="-1">
@@ -32,122 +32,27 @@
         </button>
       </div>
       <nav class="top-nav" aria-label="Primary">
-        <a href="#admin-dashboard">Overview</a>
-        <a href="#admin-table-section">Table</a>
+        <a class="is-active" href="./admin-dashboard.html" aria-current="page">Hub</a>
+        <a href="./admin-table.html">Table</a>
+        <a href="./admin-wheel.html">Wheel</a>
+        <a href="./admin-teams.html">Teams</a>
+        <a href="./admin-certificates.html">Certificates</a>
         <button class="admin-top-exit" id="admin-logout" type="button">Exit</button>
       </nav>
     </div>
   </header>
+
   <main class="admin-shell">
-    <section class="admin-dashboard card" id="admin-dashboard">
-      <div class="admin-toolbar">
-        <div class="admin-toolbar-copy">
-          <p class="admin-kicker">Live</p>
-          <h2>Delegates</h2>
-          <p class="admin-status" id="admin-status">Loading...</p>
-        </div>
-        <div class="admin-toolbar-actions">
-          <button class="button button-secondary admin-refresh-button" id="admin-refresh" type="button">Reload</button>
-        </div>
-      </div>
-
-      <div class="admin-summary-grid">
-        <article class="admin-summary-panel">
-          <span>Delegates</span>
-          <strong id="admin-total-delegates">0</strong>
-        </article>
-        <article class="admin-summary-panel">
-          <span>Groups</span>
-          <strong id="admin-total-groups">0</strong>
-        </article>
-        <article class="admin-summary-panel">
-          <span>Showing</span>
-          <strong id="admin-visible-rows">0</strong>
-        </article>
-      </div>
-
-      <div class="admin-controls">
-        <label class="admin-search">
-          <span>Find</span>
-          <input id="admin-search" type="search" placeholder="Church, name, contact">
-        </label>
-        <button class="button button-primary admin-search-button" id="admin-search-button" type="button">Search</button>
-      </div>
-
-      <section class="team-builder-panel" aria-labelledby="team-builder-title">
-        <div class="team-builder-head">
-          <div class="team-builder-copy">
-            <p class="admin-kicker">Randomizer</p>
-            <h3 id="team-builder-title">Balanced Teams</h3>
-            <p>Fair split by age and level.</p>
-          </div>
-        </div>
-
-        <div class="team-builder-form">
-          <label class="team-builder-field">
-            <span>Teams</span>
-            <input id="team-count" type="number" min="2" max="20" value="4" inputmode="numeric">
-          </label>
-          <label class="team-builder-field team-builder-field-wide">
-            <span>Team Names</span>
-            <textarea id="team-names" rows="2" placeholder="Red, Blue, Gold, Green"></textarea>
-          </label>
-          <button class="button button-primary team-builder-button" id="team-generate" type="button">Generate</button>
-        </div>
-
-        <p class="team-builder-note" id="team-builder-note">Uses the full camper masterlist. No duplicate camper in one draw.</p>
-        <div class="team-results" id="team-results"></div>
+    <section class="admin-dashboard card">
+      <section class="admin-landing-display" aria-label="Delegate summary">
+        <h1 class="admin-kicker">Total Delegates</h1>
+        <strong class="admin-landing-count" id="admin-total-delegates">0</strong>
+        <p class="admin-landing-date" id="admin-current-date">Loading date...</p>
+        <p class="admin-landing-time" id="admin-current-time">Loading time...</p>
+        <p class="admin-status" id="admin-status">Loading...</p>
       </section>
-
-      <section class="wheel-panel" aria-labelledby="wheel-title">
-        <div class="wheel-panel-head">
-          <div class="team-builder-copy">
-            <p class="admin-kicker">Game Wheel</p>
-            <h3 id="wheel-title">Spin The Delegates</h3>
-            <p>Random picker for games and quick draws.</p>
-          </div>
-          <div class="wheel-actions">
-            <button class="button button-primary wheel-spin-button" id="wheel-spin" type="button">Spin</button>
-            <button class="button button-secondary wheel-reset-button" id="wheel-reset" type="button">Reset</button>
-          </div>
-        </div>
-
-        <div class="wheel-layout">
-          <div class="wheel-canvas-shell">
-            <div class="wheel-pointer" aria-hidden="true"></div>
-            <canvas id="delegate-wheel" width="520" height="520"></canvas>
-          </div>
-          <div class="wheel-side">
-            <p class="wheel-status" id="wheel-status">Load delegates first.</p>
-            <div class="wheel-winner-card">
-              <span>Picked</span>
-              <strong id="wheel-winner-name">Waiting...</strong>
-              <small id="wheel-winner-meta">Spin the wheel to choose one delegate.</small>
-            </div>
-            <button class="button button-secondary wheel-remove-button" id="wheel-remove-winner" type="button">Remove Winner</button>
-          </div>
-        </div>
-      </section>
-
-      <div class="admin-table-wrap" id="admin-table-section">
-            <table class="admin-table">
-              <thead>
-                <tr>
-                  <th><button type="button" class="admin-sort" data-sort-key="church_name">Group</button></th>
-                  <th><button type="button" class="admin-sort" data-sort-key="church_address">Address</button></th>
-              <th><button type="button" class="admin-sort" data-sort-key="pastor_name">Pastor</button></th>
-              <th><button type="button" class="admin-sort" data-sort-key="contact_person">Lead</button></th>
-              <th><button type="button" class="admin-sort" data-sort-key="contact_number">Phone</button></th>
-              <th><button type="button" class="admin-sort" data-sort-key="attendee_count">Count</button></th>
-              <th><button type="button" class="admin-sort" data-sort-key="camper_names">Names</button></th>
-              <th><button type="button" class="admin-sort" data-sort-key="submitted_at">Time</button></th>
-                </tr>
-              </thead>
-              <tbody id="admin-table-body"></tbody>
-            </table>
-          </div>
-        </section>
-      </main>
+    </section>
+  </main>
 
   <script type="module" src="admin-dashboard.js"></script>
 </body>

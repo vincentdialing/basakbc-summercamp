@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BBC Admin Table View</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="admin-page admin-dashboard-page">
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="header-brand-group">
+        <a class="brand-lockup" href="./admin-dashboard.html" aria-label="Return to admin hub">
+          <img src="assets/church-logo.svg" alt="Basak Baptist Church official logo">
+          <div>
+            <strong>Basak Baptist Church</strong>
+            <span>Table View</span>
+          </div>
+        </a>
+        <button class="music-toggle admin-header-spacer" type="button" aria-hidden="true" tabindex="-1">
+          <svg class="music-toggle-on" viewBox="0 0 24 24" aria-hidden="true"></svg>
+          <svg class="music-toggle-off" viewBox="0 0 24 24" aria-hidden="true"></svg>
+        </button>
+      </div>
+      <nav class="top-nav" aria-label="Primary">
+        <a href="./admin-dashboard.html">Hub</a>
+        <a class="is-active" href="./admin-table.html" aria-current="page">Table</a>
+        <a href="./admin-wheel.html">Wheel</a>
+        <a href="./admin-teams.html">Teams</a>
+        <a href="./admin-certificates.html">Certificates</a>
+        <button class="admin-top-exit" id="admin-logout" type="button">Exit</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="admin-shell">
+    <section class="admin-dashboard card">
+      <div class="admin-toolbar">
+        <div class="admin-toolbar-copy">
+          <h2>Delegates Table</h2>
+          <p class="admin-status" id="admin-status">Loading...</p>
+        </div>
+        <div class="admin-toolbar-actions">
+          <button class="button button-secondary admin-refresh-button" id="admin-refresh" type="button">Reload</button>
+        </div>
+      </div>
+
+      <div class="admin-summary-grid">
+        <article class="admin-summary-panel">
+          <span>Delegates</span>
+          <strong id="admin-total-delegates">0</strong>
+        </article>
+        <article class="admin-summary-panel">
+          <span>Groups</span>
+          <strong id="admin-total-groups">0</strong>
+        </article>
+        <article class="admin-summary-panel">
+          <span>Showing</span>
+          <strong id="admin-visible-rows">0</strong>
+        </article>
+      </div>
+
+      <div class="admin-controls">
+        <label class="admin-search">
+          <span>Find</span>
+          <input id="admin-search" type="search" placeholder="Church, name, contact">
+        </label>
+        <button class="button button-primary admin-search-button" id="admin-search-button" type="button">Search</button>
+      </div>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <colgroup>
+            <col class="admin-col-count">
+            <col class="admin-col-name">
+            <col class="admin-col-church">
+            <col class="admin-col-pastor">
+            <col class="admin-col-address">
+            <col class="admin-col-leader">
+            <col class="admin-col-phone">
+            <col class="admin-col-time">
+          </colgroup>
+          <thead>
+            <tr>
+              <th><button type="button" class="admin-sort" data-sort-key="attendee_count">Count</button></th>
+              <th><button type="button" class="admin-sort" data-sort-key="camper_names">Name</button></th>
+              <th><button type="button" class="admin-sort" data-sort-key="church_name">Church</button></th>
+              <th><button type="button" class="admin-sort" data-sort-key="pastor_name">Pastor</button></th>
+              <th><button type="button" class="admin-sort" data-sort-key="church_address">Address</button></th>
+              <th><button type="button" class="admin-sort" data-sort-key="contact_person">Leader</button></th>
+              <th><button type="button" class="admin-sort" data-sort-key="contact_number">Phone</button></th>
+              <th><button type="button" class="admin-sort" data-sort-key="submitted_at">Registered At</button></th>
+            </tr>
+          </thead>
+          <tbody id="admin-table-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="admin-table.js"></script>
+</body>
+
+</html>

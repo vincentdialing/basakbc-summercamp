@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BBC Admin Team Creation</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="admin-page admin-dashboard-page">
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="header-brand-group">
+        <a class="brand-lockup" href="./admin-dashboard.html" aria-label="Return to admin hub">
+          <img src="assets/church-logo.svg" alt="Basak Baptist Church official logo">
+          <div>
+            <strong>Basak Baptist Church</strong>
+            <span>Team Creation</span>
+          </div>
+        </a>
+        <button class="music-toggle admin-header-spacer" type="button" aria-hidden="true" tabindex="-1">
+          <svg class="music-toggle-on" viewBox="0 0 24 24" aria-hidden="true"></svg>
+          <svg class="music-toggle-off" viewBox="0 0 24 24" aria-hidden="true"></svg>
+        </button>
+      </div>
+      <nav class="top-nav" aria-label="Primary">
+        <a href="./admin-dashboard.html">Hub</a>
+        <a href="./admin-table.html">Table</a>
+        <a href="./admin-wheel.html">Wheel</a>
+        <a class="is-active" href="./admin-teams.html" aria-current="page">Teams</a>
+        <a href="./admin-certificates.html">Certificates</a>
+        <button class="admin-top-exit" id="admin-logout" type="button">Exit</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="admin-shell">
+    <section class="admin-dashboard card">
+      <div class="admin-toolbar">
+        <div class="admin-toolbar-copy">
+          <h2>Balanced Teams</h2>
+          <p class="admin-status" id="admin-status">Loading...</p>
+        </div>
+        <div class="admin-toolbar-actions">
+          <button class="button button-secondary admin-refresh-button" id="admin-refresh" type="button">Reload</button>
+        </div>
+      </div>
+
+      <section class="team-builder-panel" aria-labelledby="team-builder-title">
+        <div class="team-builder-head">
+          <div class="team-builder-copy">
+            <h3 id="team-builder-title">Create Camp Teams</h3>
+            <p><strong id="team-source-count">0</strong> campers available for balancing.</p>
+          </div>
+        </div>
+
+        <div class="team-builder-form">
+          <label class="team-builder-field">
+            <span>Teams</span>
+            <input id="team-count" type="number" min="2" max="20" value="4" inputmode="numeric">
+          </label>
+          <label class="team-builder-field team-builder-field-wide">
+            <span>Team Names</span>
+            <textarea id="team-names" rows="2" placeholder="Red, Blue, Gold, Green"></textarea>
+          </label>
+          <button class="button button-primary team-builder-button" id="team-generate" type="button">Generate</button>
+        </div>
+
+        <p class="team-builder-note" id="team-builder-note">Uses the full camper masterlist. No duplicate camper in one draw.</p>
+        <div class="team-results" id="team-results"></div>
+      </section>
+    </section>
+  </main>
+
+  <script type="module" src="admin-teams.js"></script>
+</body>
+
+</html>

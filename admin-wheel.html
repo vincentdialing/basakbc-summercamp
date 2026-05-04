@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BBC Admin Spin The Wheel</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="admin-page admin-dashboard-page">
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="header-brand-group">
+        <a class="brand-lockup" href="./admin-dashboard.html" aria-label="Return to admin hub">
+          <img src="assets/church-logo.svg" alt="Basak Baptist Church official logo">
+          <div>
+            <strong>Basak Baptist Church</strong>
+            <span>Spin The Wheel</span>
+          </div>
+        </a>
+        <button class="music-toggle admin-header-spacer" type="button" aria-hidden="true" tabindex="-1">
+          <svg class="music-toggle-on" viewBox="0 0 24 24" aria-hidden="true"></svg>
+          <svg class="music-toggle-off" viewBox="0 0 24 24" aria-hidden="true"></svg>
+        </button>
+      </div>
+      <nav class="top-nav" aria-label="Primary">
+        <a href="./admin-dashboard.html">Hub</a>
+        <a href="./admin-table.html">Table</a>
+        <a class="is-active" href="./admin-wheel.html" aria-current="page">Wheel</a>
+        <a href="./admin-teams.html">Teams</a>
+        <a href="./admin-certificates.html">Certificates</a>
+        <button class="admin-top-exit" id="admin-logout" type="button">Exit</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="admin-shell">
+    <section class="admin-dashboard card">
+      <div class="admin-toolbar">
+        <div class="admin-toolbar-copy">
+          <h2>Spin The Wheel</h2>
+          <p class="admin-status" id="admin-status">Loading...</p>
+        </div>
+      </div>
+
+      <section class="wheel-panel" aria-labelledby="wheel-title">
+        <div class="wheel-panel-head">
+          <h3 id="wheel-title">Delegate Wheel</h3>
+          <div class="wheel-actions">
+            <button class="button button-primary wheel-spin-button" id="wheel-spin" type="button">Spin</button>
+            <button class="button button-secondary wheel-reset-button" id="wheel-reset" type="button">Reset</button>
+          </div>
+        </div>
+
+        <p class="wheel-status" id="wheel-status">Load delegates first.</p>
+
+        <div class="wheel-layout">
+          <div class="wheel-canvas-shell">
+            <div class="wheel-pointer" aria-hidden="true"></div>
+            <canvas id="delegate-wheel" width="520" height="520"></canvas>
+          </div>
+        </div>
+
+        <div class="wheel-winner-overlay" id="wheel-winner-overlay" hidden>
+          <div class="wheel-winner-backdrop" data-wheel-close="true"></div>
+          <div class="wheel-winner-modal" role="dialog" aria-modal="true" aria-labelledby="wheel-winner-name">
+            <span>Picked</span>
+            <strong id="wheel-winner-name">Waiting...</strong>
+            <small id="wheel-winner-meta">Spin the wheel to choose one delegate.</small>
+            <div class="wheel-winner-actions">
+              <button class="button button-primary wheel-remove-button" id="wheel-remove-winner" type="button">Remove</button>
+              <button class="button button-secondary wheel-close-button" id="wheel-close-overlay" type="button">Keep</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script type="module" src="admin-wheel.js"></script>
+</body>
+
+</html>

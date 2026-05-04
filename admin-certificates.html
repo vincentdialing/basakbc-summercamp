@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BBC Admin Certificates</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="admin-page admin-dashboard-page">
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="header-brand-group">
+        <a class="brand-lockup" href="./admin-dashboard.html" aria-label="Return to admin hub">
+          <img src="assets/church-logo.svg" alt="Basak Baptist Church official logo">
+          <div>
+            <strong>Basak Baptist Church</strong>
+            <span>Create Certificate</span>
+          </div>
+        </a>
+        <button class="music-toggle admin-header-spacer" type="button" aria-hidden="true" tabindex="-1">
+          <svg class="music-toggle-on" viewBox="0 0 24 24" aria-hidden="true"></svg>
+          <svg class="music-toggle-off" viewBox="0 0 24 24" aria-hidden="true"></svg>
+        </button>
+      </div>
+      <nav class="top-nav" aria-label="Primary">
+        <a href="./admin-dashboard.html">Hub</a>
+        <a href="./admin-table.html">Table</a>
+        <a href="./admin-wheel.html">Wheel</a>
+        <a href="./admin-teams.html">Teams</a>
+        <a class="is-active" href="./admin-certificates.html" aria-current="page">Certificates</a>
+        <button class="admin-top-exit" id="admin-logout" type="button">Exit</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="admin-shell">
+    <section class="admin-dashboard card">
+      <div class="admin-toolbar">
+        <div class="admin-toolbar-copy">
+          <h2>Certificate Builder</h2>
+          <p class="admin-status" id="admin-status">Loading...</p>
+        </div>
+        <div class="admin-toolbar-actions">
+          <button class="button button-secondary admin-refresh-button" id="admin-refresh" type="button">Reload</button>
+        </div>
+      </div>
+
+      <div class="certificate-layout">
+        <section class="team-builder-panel certificate-form-panel" aria-labelledby="certificate-form-title">
+          <div class="team-builder-head">
+            <div class="team-builder-copy">
+              <h3 id="certificate-form-title">Build a Printable Certificate</h3>
+              <p>Choose a delegate and update the certificate text before printing.</p>
+            </div>
+          </div>
+
+          <div class="certificate-form-grid">
+            <label class="team-builder-field certificate-field-wide">
+              <span>Delegate</span>
+              <select id="certificate-delegate">
+                <option value="">Select a delegate</option>
+              </select>
+            </label>
+            <label class="team-builder-field">
+              <span>Title</span>
+              <input id="certificate-title" type="text" value="Certificate of Participation">
+            </label>
+            <label class="team-builder-field certificate-field-wide">
+              <span>Subtitle</span>
+              <textarea id="certificate-subtitle" rows="3">Presented for joining the Basak Baptist Church Summer Youth Camp 2026.</textarea>
+            </label>
+            <label class="team-builder-field">
+              <span>Signer</span>
+              <input id="certificate-signer" type="text" value="Camp Leadership Team">
+            </label>
+            <label class="team-builder-field">
+              <span>Role</span>
+              <input id="certificate-role" type="text" value="Event Coordinator">
+            </label>
+            <label class="team-builder-field">
+              <span>Date</span>
+              <input id="certificate-date" type="date" value="2026-05-06">
+            </label>
+          </div>
+
+          <div class="admin-toolbar-actions certificate-actions">
+            <button class="button button-secondary" id="certificate-preview" type="button">Preview</button>
+            <button class="button button-primary" id="certificate-print" type="button">Print Certificate</button>
+          </div>
+        </section>
+
+        <section class="certificate-preview-shell" id="certificate-preview-stage" hidden>
+          <article class="certificate-preview-card">
+            <p class="certificate-preview-mark">Basak Baptist Church Summer Youth Camp 2026</p>
+            <h3 id="certificate-preview-title">Certificate of Participation</h3>
+            <p class="certificate-preview-lead">This certificate is proudly presented to</p>
+            <strong id="certificate-preview-name">Delegate Name</strong>
+            <p id="certificate-preview-subtitle">Presented for joining the Basak Baptist Church Summer Youth Camp 2026.</p>
+            <div class="certificate-preview-footer" id="certificate-preview-footer">
+              <span>Basak Baptist Church</span>
+              <strong>Camp Leadership Team</strong>
+              <small>Event Coordinator · May 6, 2026</small>
+            </div>
+          </article>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="admin-certificates.js"></script>
+</body>
+
+</html>
