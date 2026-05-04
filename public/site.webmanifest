@@ -1,17 +1,17 @@
 {
-  "name": "Basak Baptist Church Summer Youth Camp 2026",
-  "short_name": "BBC Camp 2026",
-  "description": "Official invitation and registration page for the Basak Baptist Church Summer Youth Camp 2026.",
+  "name": "2nd Ambassadors Baptist Youth Camp 2026",
+  "short_name": "2nd Ambassadors Camp",
+  "description": "Official invitation and registration page for the 2nd Ambassadors Baptist Youth Camp 2026. Host Venue: Basak Baptist Church.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#fff8ec",
-  "theme_color": "#f04a27",
+  "theme_color": "#d4a017",
   "icons": [
     {
-      "src": "/preview.webp",
-      "sizes": "3244x1720",
-      "type": "image/webp",
+      "src": "/assets/preview.png",
+      "sizes": "1672x941",
+      "type": "image/png",
       "purpose": "any"
     }
   ]

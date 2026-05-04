@@ -1,5 +1,5 @@
 {
-  "name": "basak-baptist-youth-camp",
+  "name": "2nd-ambassadors-baptist-youth-camp",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -10,5 +10,9 @@
   },
   "devDependencies": {
     "vite": "^7.1.0"
+  },
+  "dependencies": {
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.7"
   }
 }

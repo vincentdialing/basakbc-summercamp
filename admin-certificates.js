@@ -80,7 +80,7 @@ function renderCertificatePreview() {
 
   if (previewSubtitle) {
     const subtitle = subtitleInput?.value?.trim()
-      || "Presented for joining the Basak Baptist Church Summer Youth Camp 2026.";
+      || "Presented for joining the 2nd Ambassadors Baptist Youth Camp 2026 held at Basak Baptist Church.";
     previewSubtitle.textContent = subtitle;
   }
 
@@ -95,7 +95,7 @@ function renderCertificatePreview() {
     });
 
     previewFooter.innerHTML = `
-      <span>${escapeHtml(camper.church_name || "Basak Baptist Church")}</span>
+      <span>Host Venue: Basak Baptist Church</span>
       <strong>${escapeHtml(signer)}</strong>
       <small>${escapeHtml(role)} · ${escapeHtml(formattedDate)}</small>
     `;

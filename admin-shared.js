@@ -486,7 +486,7 @@ export function renderTeamResults(teams, host) {
 
 export function pickWheelPalette(index) {
   const palette = [
-    ["#f7d8cf", "#c94a35"],
+    ["#fff1bf", "#d4a017"],
     ["#dce9f7", "#477fbc"],
     ["#dbeee5", "#438868"],
     ["#f8ebc0", "#b38718"],

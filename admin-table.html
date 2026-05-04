@@ -22,7 +22,7 @@
         <a class="brand-lockup" href="./admin-dashboard.html" aria-label="Return to admin hub">
           <img src="assets/church-logo.svg" alt="Basak Baptist Church official logo">
           <div>
-            <strong>Basak Baptist Church</strong>
+            <strong>2nd Ambassadors Baptist Youth Camp</strong>
             <span>Table View</span>
           </div>
         </a>
@@ -50,6 +50,7 @@
           <p class="admin-status" id="admin-status">Loading...</p>
         </div>
         <div class="admin-toolbar-actions">
+          <button class="button button-secondary admin-pdf-button" id="admin-download-pdf" type="button">Download PDF</button>
           <button class="button button-secondary admin-refresh-button" id="admin-refresh" type="button">Reload</button>
         </div>
       </div>
@@ -60,19 +61,15 @@
           <strong id="admin-total-delegates">0</strong>
         </article>
         <article class="admin-summary-panel">
-          <span>Groups</span>
+          <span>Church</span>
           <strong id="admin-total-groups">0</strong>
-        </article>
-        <article class="admin-summary-panel">
-          <span>Showing</span>
-          <strong id="admin-visible-rows">0</strong>
         </article>
       </div>
 
       <div class="admin-controls">
         <label class="admin-search">
           <span>Find</span>
-          <input id="admin-search" type="search" placeholder="Church, name, contact">
+          <input id="admin-search" type="search" placeholder="Church, Name, Contect">
         </label>
         <button class="button button-primary admin-search-button" id="admin-search-button" type="button">Search</button>
       </div>
@@ -99,7 +96,7 @@
               <th><button type="button" class="admin-sort" data-sort-key="church_address">Address</button></th>
               <th><button type="button" class="admin-sort" data-sort-key="contact_person">Leader</button></th>
               <th><button type="button" class="admin-sort" data-sort-key="contact_number">Phone</button></th>
-              <th>Payment</th>
+              <th><span class="admin-static-head">Payment</span></th>
               <th><button type="button" class="admin-sort" data-sort-key="submitted_at">Registered At</button></th>
             </tr>
           </thead>
