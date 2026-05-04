@@ -14,6 +14,7 @@ import {
 
 const refreshButton = document.getElementById("admin-refresh");
 const statusText = document.getElementById("admin-status");
+const churchFilter = document.getElementById("admin-church-filter");
 const searchInput = document.getElementById("admin-search");
 const searchButton = document.getElementById("admin-search-button");
 const tableBody = document.getElementById("admin-table-body");
@@ -25,6 +26,7 @@ const paymentStorageKey = "bbc-admin-payment-status";
 
 const adminState = {
   rows: [],
+  churchFilter: "all",
   searchTerm: "",
   sortKey: "submitted_at",
   sortDirection: "desc",
@@ -63,7 +65,7 @@ function setStatus(message, tone = "neutral") {
 }
 
 function renderSummary() {
-  const summary = summarizeRows(adminState.rows);
+  const summary = summarizeRows(getScopedRows());
 
   if (totalGroups) {
     totalGroups.textContent = String(summary.groups);
@@ -74,13 +76,47 @@ function renderSummary() {
   }
 }
 
+function getScopedRows() {
+  if (adminState.churchFilter === "all") {
+    return [...adminState.rows];
+  }
+
+  return adminState.rows.filter((row) => String(row.church_name || "") === adminState.churchFilter);
+}
+
 function getVisibleTableRows() {
   return getFilteredRows(
-    adminState.rows,
+    getScopedRows(),
     adminState.searchTerm,
     adminState.sortKey,
     adminState.sortDirection
   );
+}
+
+function renderChurchFilterOptions() {
+  if (!(churchFilter instanceof HTMLSelectElement)) {
+    return;
+  }
+
+  const churchNames = Array.from(new Set(
+    adminState.rows
+      .map((row) => String(row.church_name || "").trim())
+      .filter(Boolean)
+  )).sort((left, right) => left.localeCompare(right));
+
+  const options = churchNames.map((churchName) => `
+    <option value="${escapeHtml(churchName)}">${escapeHtml(churchName)}</option>
+  `).join("");
+
+  churchFilter.innerHTML = `
+    <option value="all">All</option>
+    ${options}
+  `;
+
+  const hasSelectedChurch = adminState.churchFilter === "all"
+    || churchNames.includes(adminState.churchFilter);
+  churchFilter.value = hasSelectedChurch ? adminState.churchFilter : "all";
+  adminState.churchFilter = churchFilter.value;
 }
 
 function renderTable() {
@@ -275,12 +311,16 @@ function buildPdfRows(rows) {
 function getPdfFileName() {
   const exportDate = new Date();
   const dateStamp = exportDate.toLocaleDateString("en-CA");
-  return `2nd-ambassadors-baptist-youth-camp-2026-delegates-${dateStamp}.pdf`;
+  return `2nd-ABYC-Delegates-${dateStamp}.pdf`;
 }
 
 async function handleDownloadPdf() {
   const rows = getVisibleTableRows();
   const exportDate = new Date();
+  const pdfColumnWidths = [12, 68, 34, 31, 36, 25, 25, 21, 25];
+  const tableLeft = 10;
+  const tableRight = 10;
+  const tableWidth = 297 - tableLeft - tableRight;
   const exportedAt = exportDate.toLocaleString("en-PH", {
     year: "numeric",
     month: "long",
@@ -302,9 +342,9 @@ async function handleDownloadPdf() {
     });
 
     pdf.setFillColor(255, 250, 247);
-    pdf.roundedRect(10, 10, 277, 28, 5, 5, "F");
+    pdf.roundedRect(tableLeft, 10, tableWidth, 28, 5, 5, "F");
     pdf.setDrawColor(226, 205, 197);
-    pdf.roundedRect(10, 10, 277, 28, 5, 5, "S");
+    pdf.roundedRect(tableLeft, 10, tableWidth, 28, 5, 5, "S");
 
     pdf.addImage(logoDataUrl, "PNG", 16, 14, 16, 16);
 
@@ -314,8 +354,8 @@ async function handleDownloadPdf() {
     pdf.text("DELEGATES", 36, 18);
 
     pdf.setTextColor(24, 32, 42);
-    pdf.setFontSize(18);
-    pdf.text("2nd Ambassadors Baptist Youth Camp", 36, 25.5);
+    pdf.setFontSize(14);
+    pdf.text("2nd Ambassadors Baptist Youth Camp Delegates", 36, 25.5);
 
     pdf.setTextColor(95, 109, 126);
     pdf.setFontSize(11);
@@ -323,33 +363,33 @@ async function handleDownloadPdf() {
 
     pdf.setTextColor(160, 122, 0);
     pdf.setFontSize(9);
-    pdf.text("EXPORTED", 255, 18, { align: "right" });
+    pdf.text("EXPORTED", tableLeft + tableWidth - 25, 18, { align: "right" });
 
     pdf.setTextColor(95, 109, 126);
     pdf.setFontSize(10);
-    pdf.text(exportedAt, 280, 25.5, { align: "right" });
-    pdf.text(`Visible rows: ${rows.length}`, 280, 31.5, { align: "right" });
+    pdf.text(exportedAt, tableLeft + tableWidth - 5, 25.5, { align: "right" });
 
     autoTable(pdf, {
       startY: 44,
-      margin: { left: 10, right: 10, bottom: 10 },
+      margin: { left: tableLeft, right: tableRight, bottom: 10 },
+      tableWidth,
       head: [[
         "Count",
         "Name",
         "Church",
         "Pastor",
         "Address",
-        "Leader",
+        "Church Rep",
         "Phone",
         "Payment",
-        "Registered At"
+        "Reg. At"
       ]],
       body: buildPdfRows(rows),
       theme: "grid",
       styles: {
         font: "helvetica",
-        fontSize: 7.4,
-        cellPadding: 2.4,
+        fontSize: 7.2,
+        cellPadding: 2.1,
         lineColor: [232, 221, 215],
         lineWidth: 0.15,
         overflow: "linebreak",
@@ -360,27 +400,33 @@ async function handleDownloadPdf() {
         fillColor: [255, 248, 244],
         textColor: [24, 32, 42],
         fontStyle: "bold",
-        fontSize: 8.1
+        fontSize: 7.9,
+        halign: "left",
+        valign: "middle"
       },
       alternateRowStyles: {
         fillColor: [255, 252, 251]
       },
       columnStyles: {
-        0: { cellWidth: 12 },
-        1: { cellWidth: 58 },
-        2: { cellWidth: 31 },
-        3: { cellWidth: 28 },
-        4: { cellWidth: 33 },
-        5: { cellWidth: 24 },
-        6: { cellWidth: 23 },
-        7: { cellWidth: 18 },
-        8: { cellWidth: 24 }
+        0: { cellWidth: pdfColumnWidths[0] },
+        1: { cellWidth: pdfColumnWidths[1] },
+        2: { cellWidth: pdfColumnWidths[2] },
+        3: { cellWidth: pdfColumnWidths[3] },
+        4: { cellWidth: pdfColumnWidths[4] },
+        5: { cellWidth: pdfColumnWidths[5] },
+        6: { cellWidth: pdfColumnWidths[6] },
+        7: { cellWidth: pdfColumnWidths[7] },
+        8: { cellWidth: pdfColumnWidths[8] }
       },
       didParseCell(data) {
         if (data.section === "body" && data.column.index === 7) {
           const isPaid = String(data.cell.raw || "").toLowerCase() === "paid";
           data.cell.styles.textColor = isPaid ? [42, 123, 86] : [160, 122, 0];
           data.cell.styles.fontStyle = "bold";
+        }
+
+        if (data.section === "body" && data.column.index === 0) {
+          data.cell.styles.halign = "center";
         }
       }
     });
@@ -408,10 +454,12 @@ async function loadTableData() {
   try {
     const result = await fetchAdminRows();
     adminState.rows = result.rows;
+    renderChurchFilterOptions();
     renderTable();
     setStatus(`${result.rows.length} groups loaded.`, "success");
   } catch (error) {
     adminState.rows = [];
+    renderChurchFilterOptions();
     renderTable();
     setStatus(error instanceof Error ? error.message : "Load failed.", "error");
   } finally {
@@ -443,6 +491,11 @@ function setupSort() {
 }
 
 function setupSearch() {
+  churchFilter?.addEventListener("change", () => {
+    adminState.churchFilter = churchFilter.value || "all";
+    renderTable();
+  });
+
   searchInput?.addEventListener("input", () => {
     adminState.searchTerm = searchInput.value || "";
     renderTable();

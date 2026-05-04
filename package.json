@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "jspdf": "^4.2.1",
-    "jspdf-autotable": "^5.0.7"
+    "jspdf-autotable": "^5.0.7",
+    "sharp": "^0.34.5"
   }
 }
